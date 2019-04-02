@@ -1,33 +1,36 @@
 /**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
  * @format
  * @flow
  */
 
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import {StyleSheet, Text, View, Button, NativeModules} from 'react-native';
+
+import Map from '../Map';
 
 const HttpServer = NativeModules.HttpServer;
 
 type Props = {};
-export default class App extends Component<Props> {
-  state = { text: 'nop' }
-  getString = string => this.setState({ text: string })
 
-  callNative = () => HttpServer.startServer(this.getString);
+export default class Home extends Component<Props> {
+  state = { text: 'Servicio no iniciado' }
+
+  startServiceCallback = string => this.setState({ text: string })
+
+  startService = () => HttpServer.startServer(this.startServiceCallback);
 
   render() {
     return (
       <View style={styles.container}>
         <Text style={styles.welcome}>Welcome to React Native!</Text>
         <Text style={styles.instructions}>{this.state.text}</Text>
-        <Button onPress={this.callNative} title="test" />
+        <Button onPress={this.startService} title="Iniciar servicio de Terminal" />
+        <Map />
       </View>
     );
   }
 }
+
 
 const styles = StyleSheet.create({
   container: {
