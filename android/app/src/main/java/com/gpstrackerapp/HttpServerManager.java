@@ -12,12 +12,13 @@ import com.koushikdutta.async.http.server.HttpServerRequestCallback;
 
 public class HttpServerManager extends ReactContextBaseJavaModule {
 
-    private AsyncHttpServer server;
+    private AsyncHttpServer mServer;
     private AsyncServer mAsyncServer;
+    private Callback mCallReact = null;
 
     public HttpServerManager (ReactApplicationContext reactContext) {
         super(reactContext);
-        this.server = new AsyncHttpServer();
+        this.mServer = new AsyncHttpServer();
         this.mAsyncServer = new AsyncServer();
     }
 
@@ -28,17 +29,25 @@ public class HttpServerManager extends ReactContextBaseJavaModule {
 
     @ReactMethod
     public void startServer(Callback callback) {
+        if (this.mCallReact === null) return;
         this.startServer();
-        callback.invoke("NATIVE MODULES RULES");
+        this.mCallReact = callback;
     }
 
     private void startServer() {
-        server.get("/", new HttpServerRequestCallback() {
+        mServer.get("/tracker/last", new HttpServerRequestCallback() {
             @Override
             public void onRequest(AsyncHttpServerRequest request, AsyncHttpServerResponse response) {
                 response.send("Hello!!!");
             }
         });
-        server.listen(mAsyncServer, 8080);
+        mServer.get("/tracker/new-item", new HttpServerRequestCallback() {
+            @Override
+            public void onRequest(AsyncHttpServerRequest request, AsyncHttpServerResponse response) {
+                response.send("Hello!!!");
+                this.mCallReact.invoke("INFO");
+            }
+        });
+        mServer.listen(mAsyncServer, 8080);
     }
 }
