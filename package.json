@@ -8,10 +8,21 @@
     "lint": "eslint ."
   },
   "dependencies": {
+    "eslint-config-prettier": "^4.3.0",
+    "install": "^0.12.2",
+    "npm": "^6.9.0",
+    "prettier": "^1.17.1",
     "react": "16.8.3",
     "react-native": "0.59.2",
     "react-native-config": "^0.11.7",
-    "react-native-maps": "^0.23.0"
+    "react-native-gesture-handler": "^1.2.1",
+    "react-native-maps": "^0.24.2",
+    "react-navigation": "^3.10.1",
+    "react-redux": "^7.0.3",
+    "redux": "^4.0.1",
+    "redux-thunk": "^2.3.0",
+    "reselect": "^4.0.0",
+    "seamless-immutable": "^7.1.4"
   },
   "devDependencies": {
     "@babel/core": "^7.4.0",

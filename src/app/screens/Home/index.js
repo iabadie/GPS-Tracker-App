@@ -22,9 +22,7 @@ export default class Home extends Component<Props> {
   render() {
     return (
       <View style={styles.container}>
-        <Text style={styles.welcome}>Welcome to React Native!</Text>
-        <Text style={styles.instructions}>{this.state.text}</Text>
-        <Button onPress={this.startService} title="Iniciar servicio de Terminal" />
+        <Button onPress={this.startService} title="Iniciar Servidor" />
         <Map />
       </View>
     );

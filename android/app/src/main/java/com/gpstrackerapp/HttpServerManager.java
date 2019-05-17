@@ -29,7 +29,7 @@ public class HttpServerManager extends ReactContextBaseJavaModule {
 
     @ReactMethod
     public void startServer(Callback callback) {
-        if (this.mCallReact === null) return;
+        if (this.mCallReact == null) return;
         this.startServer();
         this.mCallReact = callback;
     }
@@ -45,7 +45,7 @@ public class HttpServerManager extends ReactContextBaseJavaModule {
             @Override
             public void onRequest(AsyncHttpServerRequest request, AsyncHttpServerResponse response) {
                 response.send("Hello!!!");
-                this.mCallReact.invoke("INFO");
+                mCallReact.invoke("INFO");
             }
         });
         mServer.listen(mAsyncServer, 8080);
