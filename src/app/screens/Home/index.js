@@ -7,15 +7,16 @@ import React, { Component } from 'react';
 import {StyleSheet, Text, View, Button, NativeModules} from 'react-native';
 
 import Map from '../Map';
+import { connect } from 'react-redux';
 
 const HttpServer = NativeModules.HttpServer;
 
 type Props = {};
 
-export default class Home extends Component<Props> {
-  state = { text: 'Servicio no iniciado' }
+class Home extends Component<Props> {
+  state = { tracks: [] }
 
-  startServiceCallback = string => this.setState({ text: string })
+  startServiceCallback = tracks => this.setState({ tracks })
 
   startService = () => HttpServer.startServer(this.startServiceCallback);
 
@@ -29,6 +30,9 @@ export default class Home extends Component<Props> {
   }
 }
 
+const mapStateToProps = store => ({
+  tracker: store
+})
 
 const styles = StyleSheet.create({
   container: {
@@ -36,15 +40,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#F5FCFF',
-  },
-  welcome: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 10,
-  },
-  instructions: {
-    textAlign: 'center',
-    color: '#333333',
-    marginBottom: 5,
-  },
+  }
 });
+
+export default connect(mapStateToProps)(Home)
