@@ -19,7 +19,7 @@ export function initialLoading() {
 
 export function home() {
   return {
-    title: 'Home',
+    title: 'GPS Tracker Map',
     headerStyle: {
       height: 50,
       backgroundColor: colorSecondary

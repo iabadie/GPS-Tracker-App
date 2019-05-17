@@ -28,10 +28,11 @@ public class HttpServerManager extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void startServer(Callback callback) {
+    public void startServer(Callback callback, Callback startServerResponse) {
         if (this.mCallReact == null) return;
         this.startServer();
         this.mCallReact = callback;
+        startServerResponse.invoke(true);
     }
 
     private void startServer() {
