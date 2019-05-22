@@ -1,7 +1,11 @@
 import { AsyncStorage } from 'react-native';
 
-export const setItemSelection = async modulesSelection =>
-  AsyncStorage.setItem('@Modules:modulesSelection', JSON.stringify(modulesSelection));
+const TRACKS_PATH = '@Tracker:tracks';
 
-export const getItemSelection = async () =>
-  AsyncStorage.getItem('@Modules:modulesSelection').then(JSON.parse);
+export const setTracks = async tracks =>
+  AsyncStorage.setItem(TRACKS_PATH, JSON.stringify(tracks));
+
+export const getTracks = async () =>
+  AsyncStorage.getItem(TRACKS_PATH).then(JSON.parse);
+
+export const removeTracks = async () => AsyncStorage.removeItem(TRACKS_PATH);

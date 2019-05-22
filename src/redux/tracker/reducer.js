@@ -3,25 +3,24 @@ import Immutable from 'seamless-immutable';
 import { actions } from './actions';
 
 const defaultState = {
-  loading: false,
   tracks: []
 };
 
-/* eslint-disable complexity */
 export default function reducer(state = Immutable(defaultState), action) {
   switch (action.type) {
-    case actions.UPDATE_TRACKS: {
-      return state.merge({ initialLoading: false });
+    case actions.DELETE_TRACKS: {
+      return state.merge({ tracks: [] });
     }
-    case actions.UPDATE_TRACKS_SUCCESS: {
-      return state.merge({ loading: false, tracks: action.payload.track });
+    case actions.SET_NEW_TRACK_SUCCESS:
+    case actions.GET_TRACK_SUCCESS: {
+      return state.merge({ tracks: action.payload });
     }
-    case actions.UPDATE_TRACKS_FAILURE: {
-      return state.merge({ loading: false, err: action.payload.err });
+    case actions.SET_NEW_TRACK_FAILURE:
+    case actions.GET_TRACK_FAILURE: {
+      return state.merge({ err: action.payload.err });
     }
     default: {
       return state;
     }
   }
 }
-/* eslint-enable complexity */
