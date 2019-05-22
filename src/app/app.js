@@ -1,14 +1,13 @@
 import React, { Component } from 'react';
-import { StatusBar, View, AppState } from 'react-native';
-import PropTypes from 'prop-types';
+import { StatusBar, View } from 'react-native';
 import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 
 import AppNavigator from './screens';
 import styles from './styles';
 
 class App extends Component {
   componentDidMount() {
-    const { dispatch } = this.props;
     StatusBar.setBarStyle('light-content');
   }
 

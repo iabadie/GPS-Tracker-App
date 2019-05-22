@@ -1,6 +1,3 @@
-import React from 'react';
-import { View, Image } from 'react-native';
-
 import { white, colorSecondary } from '../constants/colors';
 
 import styles from './styles';

@@ -4,35 +4,62 @@
  */
 
 import React, { Component } from 'react';
-import {StyleSheet, Text, View, Button, NativeModules} from 'react-native';
-
-import Map from '../Map';
+import { Text, View, NativeModules } from 'react-native';
 import { connect } from 'react-redux';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import { colorSecondary, white } from '../../../constants/colors';
 
-const HttpServer = NativeModules.HttpServer;
+import Map from '../Map';
+import { actionCreators as TrackActions } from '../../../redux/tracker/actions';
+
+import styles from './styles';
+
+const { HttpServer } = NativeModules;
 
 type Props = {};
 
 class Home extends Component<Props> {
-  state = { tracks: [], serverStarted: false }
+  state = { serverStarted: false };
 
-  startServiceCallback = started => this.setState({ serverStarted: started });
-  nativeComunicationCallback = tracks => this.setState({ tracks });
+  componentDidMount() {
+    const { dispatch } = this.props;
+    dispatch(TrackActions.getTracks());
+  }
 
+  componentWillUnmount() {
+    this.stopServer();
+  }
+
+  // Called from native when server is running
+  startServiceCallback = started => {
+    this.setState({ serverStarted: started });
+  };
+
+  // Bridge between native server and JS to pass from server the body request
+  nativeComunicationCallback = tracks => {
+    const { dispatch } = this.props;
+    dispatch(TrackActions.setNewTracks(tracks));
+  };
+
+  // call native to start internal rest server
   startService = () => HttpServer.startServer(this.nativeComunicationCallback, this.startServiceCallback);
 
+  // Force to stop server instance and listenings.
+  // TODO IMPLEMENT ON NATIVE SIDE
+  stopServer = () => {
+    HttpServer.stopServer();
+    this.setState({ serverStarted: false });
+  };
+
   render() {
-    const { serverStarted } = this.state;
+    const { serverStarted, tracks } = this.state;
     return (
       <View style={styles.container}>
-        <Map />
+        <Map tracks={tracks} />
         {!serverStarted && (
           <View style={styles.buttonAbsolute}>
-            <TouchableOpacity  style={styles.touchButton} onPress={this.startService}>
+            <TouchableOpacity style={styles.touchButton} onPress={this.startService}>
               <View style={styles.button}>
-                <Text style={styles.buttonText}>{"Iniciar Servidor"}</Text>
+                <Text style={styles.buttonText}>Iniciar Servidor</Text>
               </View>
             </TouchableOpacity>
           </View>
@@ -43,35 +70,7 @@ class Home extends Component<Props> {
 }
 
 const mapStateToProps = store => ({
-  tracker: store
-})
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center'
-  },
-  buttonAbsolute: {
-    position: 'absolute',
-    left: 20,
-    right: 20,
-    bottom: 50,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  touchButton: {
-    width: 250,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: colorSecondary,
-    borderRadius: 30,
-    height: 50,
-  },
-  buttonText: {
-    color: white
-  }
-
+  tracks: store.tracker.tracks
 });
 
-export default connect(mapStateToProps)(Home)
+export default connect(mapStateToProps)(Home);

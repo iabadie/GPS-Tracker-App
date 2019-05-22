@@ -5,6 +5,7 @@ import reduxStore from '../redux/store';
 
 import App from './app';
 
+// eslint-disable-next-line react/prefer-stateless-function
 class MainApplication extends Component {
   render() {
     return (

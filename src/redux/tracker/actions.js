@@ -1,15 +1,14 @@
-import * as LocalStorageService from '../../services/trackerService';
+import * as LocalStorageService from '../../services/LocalStoreService';
 import { stringArrayToObject } from '../../utils/arrayUtils';
-import { getStackTraceLines } from 'jest-message-util';
 
 export const actions = stringArrayToObject(
   [
-    'SET_NEW_TRACK',
-    'SET_NEW_TRACK_SUCCESS',
-    'SET_NEW_TRACK_FAILURE',
-    'GET_TRACK',
-    'GET_TRACK_SUCCESS',
-    'GET_TRACK_FAILURE',
+    'SET_NEW_TRACKS',
+    'SET_NEW_TRACKS_SUCCESS',
+    'SET_NEW_TRACKS_FAILURE',
+    'GET_TRACKS',
+    'GET_TRACKS_SUCCESS',
+    'GET_TRACKS_FAILURE',
     'DELETE_TRACKS'
   ],
   '@@TRACKS'
@@ -18,25 +17,25 @@ export const actions = stringArrayToObject(
 const privateActionCreators = {
   setNewTracksSuccess(tracks) {
     return {
-      type: actions.SET_NEW_TRACK_SUCCESS,
+      type: actions.SET_NEW_TRACKS_SUCCESS,
       payload: tracks
     };
   },
   setNewTracksFailure(err) {
     return {
-      type: actions.SET_NEW_TRACK_FAILURE,
+      type: actions.SET_NEW_TRACKS_FAILURE,
       payload: { err }
     };
   },
   getTracksSuccess(tracks) {
     return {
-      type: actions.SET_NEW_TRACK_SUCCESS,
+      type: actions.GET_TRACKS_SUCCESS,
       payload: tracks
     };
   },
   getTracksFailure(err) {
     return {
-      type: actions.SET_NEW_TRACK_FAILURE,
+      type: actions.GET_TRACKS_FAILURE,
       payload: { err }
     };
   }
@@ -45,20 +44,21 @@ const privateActionCreators = {
 export const actionCreators = {
   setNewTracks(newTracks) {
     return async (dispatch, getState) => {
-      dispatch({ type: actions.SET_NEW_TRACK });
+      dispatch({ type: actions.SET_NEW_TRACKS });
       try {
+        // eslint-disable-next-line camelcase
         const parsedTracks = JSON.parse(newTracks)?.new_items;
-        if (!parsedTracks) throw new Error("Información de request inválida");
-        const tracks = getState().tracks.tracks.concat(parsedTracks);
+        if (!parsedTracks) throw new Error('Información de request inválida');
+        const tracks = getState().tracker.tracks.concat(parsedTracks);
         const response = await LocalStorageService.setTracks(tracks);
-        dispatch(privateActionCreators.setNewTracksSuccess());
+        dispatch(privateActionCreators.setNewTracksSuccess(response));
       } catch (e) {
         dispatch(privateActionCreators.setNewTracksFailure(e.message));
       }
     };
   },
   getTracks() {
-    return async (dispatch, getState) => {
+    return async dispatch => {
       dispatch({ type: actions.GET_TRACKS });
       try {
         const tracks = await LocalStorageService.getTracks();
@@ -69,8 +69,8 @@ export const actionCreators = {
     };
   },
   deleteTracks() {
-    return async (dispatch, getState) => {
-      const tracks = await LocalStorageService.removeTracks();
+    return async dispatch => {
+      await LocalStorageService.removeTracks();
       dispatch({ type: actions.DELETE_TRACKS });
     };
   }

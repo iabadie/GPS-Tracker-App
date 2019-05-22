@@ -1,4 +1,4 @@
-import { REF_RATIO, WINDOW_WIDTH, isIos, isAndroid, IS_SMALL_DEVICE } from './platform';
+import { REF_RATIO, isIos, isAndroid, IS_SMALL_DEVICE } from './platform';
 
 // NavBar
 export const IOS_STATUS_BAR_HEIGHT = 20 * REF_RATIO;
@@ -48,7 +48,6 @@ export const BORDER_RADIUS_SWITCH_TAB = 18 * REF_RATIO;
 export const BORDER_RADIUS_SEARCH_BAR = 20 * REF_RATIO;
 export const BORDER_RADIUS_SLIDER = 30 * REF_RATIO;
 export const BORDER_RADIUS_BUTTON = Math.round(30 * REF_RATIO) / 2;
-export const TAB_FIXED_BORDER_RADIUS = Math.round(BORDER_RADIUS);
 // Icons
 export const ICON_SIZE_XXSMALL = 5 * REF_RATIO;
 export const ICON_SIZE_XSMALL = 10 * REF_RATIO;
@@ -63,63 +62,3 @@ export const INPUT_HEIGHT_MEDIUM = 50 * REF_RATIO;
 export const KEYBOARD_TOP_SPACE = 20 * REF_RATIO;
 // Buttons
 export const BUTTON_HEIGHT = 60 * REF_RATIO;
-// Cells
-export const MODULE_CELL_WIDTH = WINDOW_WIDTH * 0.41;
-export const CELL_HEIGHT_SMALL = 40 * REF_RATIO;
-export const CELL_HEIGHT_MEDIUM = 60 * REF_RATIO;
-export const CHEVRON_SIZE = 25 * REF_RATIO;
-export const DROPDOWN_HEIGHT = CELL_HEIGHT_SMALL * 4;
-export const DROPDOWN_ICON_SIZE = 20 * REF_RATIO;
-export const VEHICLE_PROFILE_HEIGHT = 60 * REF_RATIO;
-export const VEHICLE_CELL_HEIGHT = 72 * REF_RATIO;
-// Avatar
-export const AVATAR_SIZE_XXSMALL = 25 * REF_RATIO;
-export const AVATAR_SIZE_SMALL = 55 * REF_RATIO;
-export const AVATAR_SIZE = 60 * REF_RATIO;
-export const AVATAR_SIZE_BIG = 105 * REF_RATIO;
-// Calendar
-export const DATE_FIELD_HEIGHT = 60 * REF_RATIO;
-export const CALENDAR_INPUT_WIDTH = 200 * REF_RATIO;
-export const HOUR_INPUT_WIDTH = 50 * REF_RATIO;
-export const CALENDAR_HEIGHT = 360 * REF_RATIO;
-export const CALENDAR_HEIGHT_ANDROID = 530 * REF_RATIO;
-export const CALENDAR_MODAL_WIDTH = 323 * REF_RATIO;
-export const HOUR_MODAL_WIDTH = 120 * REF_RATIO;
-export const HOUR_INPUT_MARGIN_LEFT = 16 * REF_RATIO;
-// Graph
-export const GRAPH_WIDTH = 345 * REF_RATIO;
-export const GRAPH_HEIGHT = 183 * REF_RATIO;
-export const BIG_POINT_OPACITY = 55;
-export const BIG_POINT_RADIUS = 8 * REF_RATIO;
-export const SMALL_POINT_RADIUS = 3.5 * REF_RATIO;
-export const DEFAULT_MARGIN = 5 * REF_RATIO;
-export const DEFAULT_CHART_LEFT_MARGIN = 5 * REF_RATIO;
-export const DEFAULT_CHART_RIGHT_MARGIN = 5 * REF_RATIO;
-export const DEFAULT_CHART_BOTTOM_MARGIN = 10 * REF_RATIO;
-export const DEFAULT_CHART_TOP_MARGIN = 30 * REF_RATIO;
-export const DEFAULT_STROKE_WIDTH = '2';
-// Logo
-export const LOGO_HEIGHT = 64 * REF_RATIO;
-export const LOGO_WIDTH = 249 * REF_RATIO;
-// Switch
-export const SWITCH_CONTAINER_HEIGHT = 50 * REF_RATIO;
-export const SLIDER__HEIGHT = 30 * REF_RATIO;
-export const SWITCH_BUTTON_HEIGHT = 40 * REF_RATIO;
-export const SWITCH_BORDER_RADIUS = 60 * REF_RATIO;
-// SearchBar
-export const SEARCH_PADDING = 40 * REF_RATIO;
-// Button with arrow icon
-export const TEXT_BUTTON_PADDING = MARGIN_TINY * isIos;
-// EmptyView
-export const EMPTY_VIEW_PADDING_HORIZONTAL = 40 * REF_RATIO;
-// ModalSelector
-export const MODAL_SELECTOR_HEIGHT = 60 * REF_RATIO;
-// CustomDayComponent
-export const CUSTOM_DAY_HEIGHT = 30 * REF_RATIO;
-export const CUSTOM_DAY_WIDTH = 44 * REF_RATIO;
-export const DAY_CIRCLE_SIZE = 25 * REF_RATIO;
-export const DAY_CIRCLE_RADIUS = Math.round(DAY_CIRCLE_SIZE / 2);
-export const LINE_HEIGHT = CUSTOM_DAY_HEIGHT / 2;
-export const LINE_WIDTH = CUSTOM_DAY_WIDTH / 2;
-export const LINE_WIDTH_RADIUS = Math.round(LINE_WIDTH / 2);
-export const FIX_MARGIN_SIZE = 2;
