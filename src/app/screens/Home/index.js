@@ -15,7 +15,10 @@ import styles from './styles';
 
 const { HttpServer } = NativeModules;
 
-type Props = {};
+type Props = {
+  lastTrack: number,
+  tracks: any
+};
 
 class Home extends Component<Props> {
   state = { serverStarted: false };
@@ -23,6 +26,7 @@ class Home extends Component<Props> {
   componentDidMount() {
     const { dispatch } = this.props;
     dispatch(TrackActions.getTracks());
+    this.setCallbacks();
   }
 
   componentWillUnmount() {
@@ -34,14 +38,28 @@ class Home extends Component<Props> {
     this.setState({ serverStarted: started });
   };
 
+  setCallbacks = () => {
+    HttpServer.setCallbacks(this.forwardTracks);
+  };
+
   // Bridge between native server and JS to pass from server the body request
-  nativeComunicationCallback = tracks => {
+  forwardTracks = tracks => {
     const { dispatch } = this.props;
+    this.setCallbacks();
+    console.log('Nacho tracks', tracks);
     dispatch(TrackActions.setNewTracks(tracks));
   };
 
+  getLastTrack = () => {
+    const { lastTrack } = this.props;
+    HttpServer.lastTrack(lastTrack);
+  };
+
   // call native to start internal rest server
-  startService = () => HttpServer.startServer(this.nativeComunicationCallback, this.startServiceCallback);
+  startService = () => {
+    const { lastTrack } = this.props;
+    HttpServer.startTrackerServer(lastTrack, this.startServiceCallback);
+  };
 
   // Force to stop server instance and listenings.
   // TODO IMPLEMENT ON NATIVE SIDE
@@ -51,7 +69,9 @@ class Home extends Component<Props> {
   };
 
   render() {
-    const { serverStarted, tracks } = this.state;
+    const { serverStarted } = this.state;
+    const { tracks } = this.props;
+    console.log('Nacho', tracks);
     return (
       <View style={styles.container}>
         <Map tracks={tracks} />
@@ -70,7 +90,8 @@ class Home extends Component<Props> {
 }
 
 const mapStateToProps = store => ({
-  tracks: store.tracker.tracks
+  tracks: store.tracker.tracks,
+  lastTrack: (store.tracker.tracks.length !== 0 ? store.tracker.tracks.length - 1 : 0).toString()
 });
 
 export default connect(mapStateToProps)(Home);

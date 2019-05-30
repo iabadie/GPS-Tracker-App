@@ -4,17 +4,25 @@ import com.facebook.react.bridge.Callback;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 import com.koushikdutta.async.AsyncServer;
 import com.koushikdutta.async.http.server.AsyncHttpServer;
 import com.koushikdutta.async.http.server.AsyncHttpServerRequest;
 import com.koushikdutta.async.http.server.AsyncHttpServerResponse;
 import com.koushikdutta.async.http.server.HttpServerRequestCallback;
 
+import java.util.HashMap;
+
 public class HttpServerManager extends ReactContextBaseJavaModule {
 
+    private Gson mJsonParser = new GsonBuilder().create();
     private AsyncHttpServer mServer;
     private AsyncServer mAsyncServer;
     private Callback mCallReact = null;
+    private String mLastTrack = "0";
+    private boolean mServerStarted = false;
 
     public HttpServerManager (ReactApplicationContext reactContext) {
         super(reactContext);
@@ -28,25 +36,40 @@ public class HttpServerManager extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void startServer(Callback callback, Callback startServerResponse) {
-        if (this.mCallReact == null) return;
+    public void startTrackerServer(String lastTrack, Callback startServiceCallback) {
+        if (this.mServerStarted) return;
         this.startServer();
+        this.mLastTrack = lastTrack;
+        startServiceCallback.invoke(true);
+    }
+
+    // Set callbacks
+    @ReactMethod
+    public void setCallbacks(Callback callback) {
         this.mCallReact = callback;
-        startServerResponse.invoke(true);
+    }
+
+    @ReactMethod
+    public void lastTrack(String lastTrack) {
+        this.mLastTrack = lastTrack;
     }
 
     private void startServer() {
         mServer.get("/tracker/last", new HttpServerRequestCallback() {
             @Override
             public void onRequest(AsyncHttpServerRequest request, AsyncHttpServerResponse response) {
-                response.send("Hello!!!");
+                response.send(mLastTrack);
             }
         });
-        mServer.get("/tracker/new-item", new HttpServerRequestCallback() {
+        mServer.post("/tracker/new-item", new HttpServerRequestCallback() {
             @Override
             public void onRequest(AsyncHttpServerRequest request, AsyncHttpServerResponse response) {
-                response.send("Hello!!!");
-                mCallReact.invoke("INFO");
+                response.send("OK");
+                String body = request.getBody().toString();
+                HashMap<String, Object> jsonBody = mJsonParser.fromJson(body,  HashMap.class);
+                if (jsonBody.get("total") == null || jsonBody.get("total").equals("")) return;
+                mLastTrack = String.valueOf((Integer.parseInt(jsonBody.get("total").toString()) + Integer.parseInt(mLastTrack)));
+                mCallReact.invoke(body);
             }
         });
         mServer.listen(mAsyncServer, 8080);
