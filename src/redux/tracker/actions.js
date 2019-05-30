@@ -1,6 +1,12 @@
 import * as LocalStorageService from '../../services/LocalStoreService';
 import { stringArrayToObject } from '../../utils/arrayUtils';
 
+const normalizeMapTracks = track => {
+  const latitude = parseFloat(`${track.latitudhemisferio === 'S' ? '-' : ''}${track.latitud}`) / 100;
+  const longitude = parseFloat(`${track.latitudhemisferio === 'W' ? '-' : ''}${track.longitud}`) / 100;
+  return { latitude, longitude };
+};
+
 export const actions = stringArrayToObject(
   [
     'SET_NEW_TRACKS',
@@ -49,9 +55,10 @@ export const actionCreators = {
         // eslint-disable-next-line camelcase
         const parsedTracks = JSON.parse(newTracks)?.new_items;
         if (!parsedTracks) throw new Error('Información de request inválida');
-        const tracks = getState().tracker.tracks.concat(parsedTracks);
-        const response = await LocalStorageService.setTracks(tracks);
-        dispatch(privateActionCreators.setNewTracksSuccess(response));
+        const mappedtracks = parsedTracks.map(track => normalizeMapTracks(track));
+        const tracks = getState().tracker.tracks.concat(mappedtracks);
+        await LocalStorageService.setTracks(tracks);
+        dispatch(privateActionCreators.setNewTracksSuccess(tracks));
       } catch (e) {
         dispatch(privateActionCreators.setNewTracksFailure(e.message));
       }

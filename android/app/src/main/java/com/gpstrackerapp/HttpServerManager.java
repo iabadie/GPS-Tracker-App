@@ -66,10 +66,14 @@ public class HttpServerManager extends ReactContextBaseJavaModule {
             public void onRequest(AsyncHttpServerRequest request, AsyncHttpServerResponse response) {
                 response.send("OK");
                 String body = request.getBody().toString();
-                HashMap<String, Object> jsonBody = mJsonParser.fromJson(body,  HashMap.class);
-                if (jsonBody.get("total") == null || jsonBody.get("total").equals("")) return;
-                mLastTrack = String.valueOf((Integer.parseInt(jsonBody.get("total").toString()) + Integer.parseInt(mLastTrack)));
-                mCallReact.invoke(body);
+                try {
+                    HashMap<String, Object> jsonBody = mJsonParser.fromJson(body,  HashMap.class);
+                    if (jsonBody.get("total") == null || jsonBody.get("total").equals("")) return;
+                    mLastTrack = String.valueOf((Integer.parseInt(jsonBody.get("total").toString()) + Integer.parseInt(mLastTrack)));
+                    mCallReact.invoke(body);
+                } catch (Exception e) {
+                    int a = 1;
+                }
             }
         });
         mServer.listen(mAsyncServer, 8080);

@@ -46,7 +46,6 @@ class Home extends Component<Props> {
   forwardTracks = tracks => {
     const { dispatch } = this.props;
     this.setCallbacks();
-    console.log('Nacho tracks', tracks);
     dispatch(TrackActions.setNewTracks(tracks));
   };
 
@@ -71,7 +70,6 @@ class Home extends Component<Props> {
   render() {
     const { serverStarted } = this.state;
     const { tracks } = this.props;
-    console.log('Nacho', tracks);
     return (
       <View style={styles.container}>
         <Map tracks={tracks} />
