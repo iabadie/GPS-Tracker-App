@@ -2,8 +2,19 @@ import * as LocalStorageService from '../../services/LocalStoreService';
 import { stringArrayToObject } from '../../utils/arrayUtils';
 
 const normalizeMapTracks = track => {
-  const latitude = parseFloat(`${track.latitudhemisferio === 'S' ? '-' : ''}${track.latitud}`) / 100;
-  const longitude = parseFloat(`${track.latitudhemisferio === 'W' ? '-' : ''}${track.longitud}`) / 100;
+  let latitude = parseFloat(track.latitud) / 100;
+  const intLat = parseInt(latitude, 10);
+  const floatLat = ((latitude - intLat) / 60) * 100;
+  latitude = (track.latitudhemisferio === 'S' ? -1 : 1) * (intLat + floatLat);
+
+  let longitude = parseFloat(track.longitud) / 100;
+
+  const intLon = parseInt(longitude, 10);
+  const floatLon = ((longitude - intLon) / 60) * 100;
+  longitude = (track.longitudhemisferio === 'W' ? -1 : 1) * (intLon + floatLon);
+
+  console.log(latitude, longitude);
+
   return { latitude, longitude };
 };
 

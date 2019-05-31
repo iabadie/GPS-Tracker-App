@@ -61,7 +61,7 @@ public class HttpServerManager extends ReactContextBaseJavaModule {
                 response.send(mLastTrack);
             }
         });
-        mServer.post("/tracker/new-item", new HttpServerRequestCallback() {
+        mServer.post("/tracker/new-items", new HttpServerRequestCallback() {
             @Override
             public void onRequest(AsyncHttpServerRequest request, AsyncHttpServerResponse response) {
                 response.send("OK");
@@ -69,7 +69,7 @@ public class HttpServerManager extends ReactContextBaseJavaModule {
                 try {
                     HashMap<String, Object> jsonBody = mJsonParser.fromJson(body,  HashMap.class);
                     if (jsonBody.get("total") == null || jsonBody.get("total").equals("")) return;
-                    mLastTrack = String.valueOf((Integer.parseInt(jsonBody.get("total").toString()) + Integer.parseInt(mLastTrack)));
+                    mLastTrack = String.valueOf(((Double)jsonBody.get("total")).intValue() + Integer.parseInt(mLastTrack));
                     mCallReact.invoke(body);
                 } catch (Exception e) {
                     int a = 1;

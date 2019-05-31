@@ -12,14 +12,14 @@ const initialState = {
   longitudeDelta: 0.008
 };
 
-const coordsMock = [
-  { latitude: -34.6085018, longitude: -58.5684025 },
-  { latitude: -34.6075019, longitude: -58.5704024 },
-  { latitude: -34.606402, longitude: -58.5684023 },
-  { latitude: -34.6054021, longitude: -58.5704022 },
-  { latitude: -34.6044023, longitude: -58.5684021 },
-  { latitude: -34.603403, longitude: -58.570402 }
-];
+// const coordsMock = [
+//   { latitude: -34.6085018, longitude: -58.5684025 },
+//   { latitude: -34.6075019, longitude: -58.5704024 },
+//   { latitude: -34.606402, longitude: -58.5684023 },
+//   { latitude: -34.6054021, longitude: -58.5704022 },
+//   { latitude: -34.6044023, longitude: -58.5684021 },
+//   { latitude: -34.603403, longitude: -58.570402 }
+// ];
 
 class Map extends Component {
   state = { region: initialState };
@@ -32,6 +32,7 @@ class Map extends Component {
     const { region } = this.state;
     // eslint-disable-next-line
     const { tracks } = this.props;
+    console.log(tracks);
     return (
       <MapView
         provider={PROVIDER_GOOGLE}
@@ -39,7 +40,7 @@ class Map extends Component {
         region={region}
         onRegionChangeComplete={this.handleRegionChange}
       >
-        <MarkersRender tracks={coordsMock} />
+        <MarkersRender tracks={tracks} />
       </MapView>
     );
   }

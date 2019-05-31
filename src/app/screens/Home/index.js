@@ -70,6 +70,7 @@ class Home extends Component<Props> {
   render() {
     const { serverStarted } = this.state;
     const { tracks } = this.props;
+    console.log(tracks);
     return (
       <View style={styles.container}>
         <Map tracks={tracks} />
