@@ -9,6 +9,7 @@ import { connect } from 'react-redux';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
 import Map from '../Map';
+import Config from '../Config';
 import { actionCreators as TrackActions } from '../../../redux/tracker/actions';
 
 import styles from './styles';
@@ -73,6 +74,7 @@ class Home extends Component<Props> {
     console.log(tracks);
     return (
       <View style={styles.container}>
+        <Config />
         <Map tracks={tracks} />
         {!serverStarted && (
           <View style={styles.buttonAbsolute}>
