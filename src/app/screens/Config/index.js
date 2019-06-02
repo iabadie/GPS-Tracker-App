@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Modal, Text, TouchableHighlight, View } from 'react-native';
+import { Modal, Text, TouchableHighlight, View, NativeModules, Alert } from 'react-native';
 import { TextInput } from 'react-native';
 
 import styles from './styles';
@@ -7,7 +7,10 @@ import styles from './styles';
 class Config extends Component {
 
   constructor(props) {
-    super(props)
+    super(props);
+
+    const { BluetoothClient } = NativeModules;
+    this.BluetoothClient = BluetoothClient;
   }
 
   state = {
@@ -26,6 +29,14 @@ class Config extends Component {
 
   handlePasswordChange = newPassword => {
     this.setState({ password: newPassword });
+  }
+
+  handleDeviceFound = device => {
+    Alert.alert(device);
+  }
+
+  handleAcceptConfig = () => {
+    this.BluetoothClient.startSearchDevices(this.handleDeviceFound);
   }
 
   render() {
@@ -61,9 +72,7 @@ class Config extends Component {
             </View>
             <View style={styles.margin}>
               <TouchableHighlight
-                onPress={() => {
-                  this.setModalVisible(!this.state.modalVisible);
-                }}>
+                onPress={this.handleAcceptConfig}>
                 <Text style={styles.configInput}>Aceptar</Text>
               </TouchableHighlight>
             </View>
