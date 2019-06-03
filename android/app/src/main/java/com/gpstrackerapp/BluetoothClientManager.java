@@ -14,7 +14,7 @@ import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 
 import java.util.LinkedList;
-import java.util.List;
+import java.util.Queue;
 import java.util.Set;
 import java.util.UUID;
 
@@ -28,8 +28,9 @@ public class BluetoothClientManager extends ReactContextBaseJavaModule {
     private static final String PASSWORD_CHARACTERISTIC_UUID = "7fb78cd6-4fa2-4289-8da4-fa4785e90659";
     private BluetoothAdapter mAdapter;
     private BluetoothGatt mGatt;
-    private List<CharacteristicDTO> mCharacteristicsToWrite;
-    private Callback mApplyConfigCallback;
+    private Queue<CharacteristicDTO> mCharacteristicsToWrite;
+    private Callback mCallback;
+    private boolean isWriting;
 
     public BluetoothClientManager(ReactApplicationContext reactContext) {
         super(reactContext);
@@ -67,15 +68,14 @@ public class BluetoothClientManager extends ReactContextBaseJavaModule {
 
     @ReactMethod
     public void applyConfig(String ssid, String password, Callback applyConfigCallback) {
-
-        this.mApplyConfigCallback = applyConfigCallback;
+        this.mCallback = applyConfigCallback;
         CharacteristicDTO ssidCharacteristicDTO = new CharacteristicDTO(SSID_SERVICE_UUID, SSID_CHARACTERISTIC_UUID, ssid);
         mCharacteristicsToWrite.add(ssidCharacteristicDTO);
         CharacteristicDTO passwordCharacteristicDTO = new CharacteristicDTO(PASSWORD_SERVICE_UUID, PASSWORD_CHARACTERISTIC_UUID, password);
         mCharacteristicsToWrite.add(passwordCharacteristicDTO);
         CharacteristicDTO onConfigCharacteristicDTO = new CharacteristicDTO(ONCONFIG_SERVICE_UUID, ONCONFIG_CHARACTERISTIC_UUID, "False");
         mCharacteristicsToWrite.add(onConfigCharacteristicDTO);
-        writeCharacteristic(mGatt, ssidCharacteristicDTO);
+        writeNextValueFromQueue();
     }
 
     private boolean writeCharacteristic(BluetoothGatt gatt, CharacteristicDTO characteristicDTO) {
@@ -90,17 +90,28 @@ public class BluetoothClientManager extends ReactContextBaseJavaModule {
         return false;
     }
 
+    private void writeNextValueFromQueue() {
+        if (isWriting || mCharacteristicsToWrite.size() == 0) {
+            return;
+        }
+        isWriting = true;
+        CharacteristicDTO characteristicDTO = mCharacteristicsToWrite.poll();
+        writeCharacteristic(mGatt, characteristicDTO);
+        if (mCharacteristicsToWrite.size() == 0) {
+            mCallback.invoke(true);
+        }
+    }
+
     private void connectToDevice(BluetoothDevice device, Callback startSearchCallback) {
         mGatt = device.connectGatt(null, true, new BluetoothGattCallback() {
 
             @Override
             public void onServicesDiscovered(BluetoothGatt gatt, int status) {
-                CharacteristicDTO configCharacteristicDTO = new CharacteristicDTO(ONCONFIG_SERVICE_UUID, ONCONFIG_CHARACTERISTIC_UUID, "True");
-                mCharacteristicsToWrite.add(configCharacteristicDTO);
-                if (status == BluetoothGatt.GATT_SUCCESS
-                        && writeCharacteristic(gatt, configCharacteristicDTO)) {
-                    startSearchCallback.invoke(true);
-
+                if (status == BluetoothGatt.GATT_SUCCESS) {
+                    CharacteristicDTO configCharacteristicDTO = new CharacteristicDTO(ONCONFIG_SERVICE_UUID, ONCONFIG_CHARACTERISTIC_UUID, "True");
+                    mCharacteristicsToWrite.add(configCharacteristicDTO);
+                    mCallback = startSearchCallback;
+                    writeNextValueFromQueue();
                 }
             }
 
@@ -112,20 +123,10 @@ public class BluetoothClientManager extends ReactContextBaseJavaModule {
             }
 
             @Override
-            public void onCharacteristicWrite(BluetoothGatt gatt, BluetoothGattCharacteristic
-                    characteristic, int status) {
+            public void onCharacteristicWrite(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, int status) {
                 if (status == BluetoothGatt.GATT_SUCCESS) {
-                    CharacteristicDTO characteristicDTO = mCharacteristicsToWrite.remove(0);
-                    if (!characteristicDTO.value.equals(characteristic.getValue())) {
-                        // MANEJAR ERROR
-                    }
-                    if (mCharacteristicsToWrite.size() > 0) {
-                        characteristicDTO = mCharacteristicsToWrite.remove(0);
-                        boolean ok = writeCharacteristic(gatt, characteristicDTO);
-                        if (ok && mCharacteristicsToWrite.size() == 0) {
-                            mApplyConfigCallback.invoke(true);
-                        }
-                    }
+                    isWriting = false;
+                    writeNextValueFromQueue();
                 }
             }
         });

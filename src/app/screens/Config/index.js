@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Modal, Text, TouchableHighlight, View, NativeModules, Alert } from 'react-native';
+import { Modal, Text, TouchableHighlight, View, NativeModules } from 'react-native';
 import { TextInput } from 'react-native';
 
 import styles from './styles';
@@ -47,9 +47,8 @@ class Config extends Component {
 
   callbackApplyConfig = applied => {
     if (!applied) {
-      Alert.alert("No se ha podido aplicar la configuracion");
+      this.handleOpenConfig();
     } else {
-      Alert.alert(applied);
       this.setState({ modalVisible: false });
     }
   }
