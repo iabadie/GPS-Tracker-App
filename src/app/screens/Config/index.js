@@ -15,6 +15,7 @@ class Config extends Component {
 
   state = {
     modalVisible: false,
+    connected: false,
     ssid: "",
     password: ""
   };
@@ -31,12 +32,26 @@ class Config extends Component {
     this.setState({ password: newPassword });
   }
 
-  handleDeviceFound = device => {
-    Alert.alert(device);
+  handleOpenConfig = () => {
+    this.setState({ modalVisible: true, connected: false });
+    this.BluetoothClient.startSearchDevices(this.callbackDeviceFound);
+  }
+
+  callbackDeviceFound = isConnected => {
+    this.setState({ connected: isConnected });
   }
 
   handleAcceptConfig = () => {
-    this.BluetoothClient.startSearchDevices(this.handleDeviceFound);
+    this.BluetoothClient.applyConfig(this.state.ssid, this.state.password, this.callbackApplyConfig);
+  }
+
+  callbackApplyConfig = applied => {
+    if (!applied) {
+      Alert.alert("No se ha podido aplicar la configuracion");
+    } else {
+      Alert.alert(applied);
+      this.setState({ modalVisible: false });
+    }
   }
 
   render() {
@@ -70,19 +85,23 @@ class Config extends Component {
                 placeholder="Password"
               />
             </View>
-            <View style={styles.margin}>
-              <TouchableHighlight
-                onPress={this.handleAcceptConfig}>
-                <Text style={styles.configInput}>Aceptar</Text>
-              </TouchableHighlight>
-            </View>
+            {
+              this.state.connected ?
+                (<View style={styles.margin}>
+                  <TouchableHighlight
+                    onPress={this.handleAcceptConfig}>
+                    <Text style={styles.configInput}>Aceptar</Text>
+                  </TouchableHighlight>
+                </View>) :
+                (<View style={styles.margin}>
+                  <Text style={styles.configInput}>Conectando</Text>
+                </View>)
+            }
           </View>
         </Modal>
 
         <TouchableHighlight
-          onPress={() => {
-            this.setModalVisible(true);
-          }}>
+          onPress={this.handleOpenConfig}>
           <Text style={styles.configInput}>Configurar</Text>
         </TouchableHighlight>
       </View >
