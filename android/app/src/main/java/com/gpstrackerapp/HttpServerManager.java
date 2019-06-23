@@ -50,6 +50,11 @@ public class HttpServerManager extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
+    public void setLastTrack(Callback callback) {
+        this.mCallReact = callback;
+    }
+
+    @ReactMethod
     public void lastTrack(String lastTrack) {
         this.mLastTrack = lastTrack;
     }

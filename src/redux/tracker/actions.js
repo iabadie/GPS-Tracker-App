@@ -1,22 +1,27 @@
+import { NativeModules } from 'react-native';
+
 import * as LocalStorageService from '../../services/LocalStoreService';
 import { stringArrayToObject } from '../../utils/arrayUtils';
+import { getFrames, setFrame } from '../../services/ApiCall';
 
-const normalizeMapTracks = track => {
-  let latitude = parseFloat(track.latitud) / 100;
-  const intLat = parseInt(latitude, 10);
-  const floatLat = ((latitude - intLat) / 60) * 100;
-  latitude = (track.latitudhemisferio === 'S' ? -1 : 1) * (intLat + floatLat);
+const { HttpServer } = NativeModules;
 
-  let longitude = parseFloat(track.longitud) / 100;
+// const normalizeMapTracks = track => {
+//   let latitude = parseFloat(track.Latitude) / 100;
+//   const intLat = parseInt(latitude, 10);
+//   const floatLat = ((latitude - intLat) / 60) * 100;
+//   latitude = (track.LatitudeHemisphere === 'S' ? -1 : 1) * (intLat + floatLat);
 
-  const intLon = parseInt(longitude, 10);
-  const floatLon = ((longitude - intLon) / 60) * 100;
-  longitude = (track.longitudhemisferio === 'W' ? -1 : 1) * (intLon + floatLon);
+//   let longitude = parseFloat(track.Longitude) / 100;
 
-  console.log(latitude, longitude);
+//   const intLon = parseInt(longitude, 10);
+//   const floatLon = ((longitude - intLon) / 60) * 100;
+//   longitude = (track.LongitudeHemisphere === 'W' ? -1 : 1) * (intLon + floatLon);
 
-  return { latitude, longitude };
-};
+//   console.log(latitude, longitude);
+
+//   return { latitude, longitude };
+// };
 
 export const actions = stringArrayToObject(
   [
@@ -64,11 +69,12 @@ export const actionCreators = {
       dispatch({ type: actions.SET_NEW_TRACKS });
       try {
         // eslint-disable-next-line camelcase
-        const parsedTracks = JSON.parse(newTracks)?.new_items;
+        const parsedTracks = JSON.parse(newTracks)?.frames;
         if (!parsedTracks) throw new Error('Información de request inválida');
-        const mappedtracks = parsedTracks.map(track => normalizeMapTracks(track));
-        const tracks = getState().tracker.tracks.concat(mappedtracks);
+        // const mappedtracks = parsedTracks.map(track => normalizeMapTracks(track));
+        const tracks = getState().tracker.tracks.concat(parsedTracks);
         await LocalStorageService.setTracks(tracks);
+        setFrame(newTracks); // Api call
         dispatch(privateActionCreators.setNewTracksSuccess(tracks));
       } catch (e) {
         dispatch(privateActionCreators.setNewTracksFailure(e.message));
@@ -76,11 +82,21 @@ export const actionCreators = {
     };
   },
   getTracks() {
-    return async dispatch => {
+    return async (dispatch, getState) => {
       dispatch({ type: actions.GET_TRACKS });
       try {
-        const tracks = await LocalStorageService.getTracks();
-        if (tracks) dispatch(privateActionCreators.getTracksSuccess(tracks));
+        const tracks = (await LocalStorageService.getTracks()) || [];
+        const response = await getFrames(tracks ? tracks[tracks.length - 1].TrackNumber : undefined); // Api call
+        if (response.ok) {
+          tracks.concat(response.data);
+          dispatch(privateActionCreators.getTracksSuccess(tracks));
+          await LocalStorageService.setTracks(tracks);
+          HttpServer.setLastTrack(String(tracks.length));
+        } else if (getState().tracker.tracks.length !== tracks.length) {
+          dispatch(privateActionCreators.getTracksSuccess(tracks));
+        } else {
+          throw new Error(response.problem);
+        }
       } catch (e) {
         dispatch(privateActionCreators.getTracksFailure(e.message));
       }
