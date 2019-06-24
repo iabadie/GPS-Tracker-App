@@ -19,6 +19,10 @@ const styles = StyleSheet.create({
   },
   whiteBackground: {
     backgroundColor: white
+  },
+  configBluetoothIcon: {
+    width: 30,
+    height: 30
   }
 });
 

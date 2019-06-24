@@ -3,6 +3,7 @@ import { StatusBar, View } from 'react-native';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
+import NavigationService from '../services/NavigationService';
 import { apiSetup } from '../services/ApiCall';
 
 import AppNavigator from './screens';
@@ -21,7 +22,11 @@ class App extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <AppNavigator />
+        <AppNavigator
+          ref={navigatorRef => {
+            NavigationService.setTopLevelNavigator(navigatorRef);
+          }}
+        />
       </View>
     );
   }
