@@ -91,8 +91,7 @@ export const actionCreators = {
           tracks.concat(response.data);
           dispatch(privateActionCreators.getTracksSuccess(tracks));
           await LocalStorageService.setTracks(tracks);
-          console.warn(response);
-          // HttpServer.setLastTrack(String(tracks.length));
+          HttpServer.setLastTrack(tracks.length.toString());
         } else if (getState().tracker.tracks.length !== tracks.length) {
           dispatch(privateActionCreators.getTracksSuccess(tracks));
         } else {

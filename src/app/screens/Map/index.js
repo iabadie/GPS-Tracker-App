@@ -24,6 +24,16 @@ const initialState = {
 class Map extends Component {
   state = { region: initialState };
 
+  componentDidUpdate(prevProps) {
+    const { tracks } = this.props; // eslint-disable-line
+    if (prevProps.tracks.length !== tracks.length) {// eslint-disable-line
+      const last = tracks[tracks.length - 1];
+      this.setState(prevState => ({// eslint-disable-line
+        region: { ...prevState.region, latitude: last.latitude, longitude: last.longitude }
+      }));
+    }
+  }
+
   handleRegionChange = region => {
     this.setState({ region });
   };

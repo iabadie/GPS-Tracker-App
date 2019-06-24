@@ -6,7 +6,10 @@
     "start": "node node_modules/react-native/local-cli/cli.js start",
     "test": "jest",
     "lint": "eslint src",
-    "lint-fix": "eslint src --fix"
+    "lint-fix": "eslint src --fix",
+    "android:clean": "cd android/ && ./gradlew clean",
+    "android:build": "cd android && ./gradlew clean && ./gradlew assembleRelease",
+    "android:install": "cd android && ./gradlew clean && ./gradlew assembleRelease && ./gradlew installRelease"
   },
   "dependencies": {
     "@react-native-community/async-storage": "^1.4.0",
