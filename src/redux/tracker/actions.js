@@ -31,7 +31,8 @@ export const actions = stringArrayToObject(
     'GET_TRACKS',
     'GET_TRACKS_SUCCESS',
     'GET_TRACKS_FAILURE',
-    'DELETE_TRACKS'
+    'DELETE_TRACKS',
+    'PULLING_TRACKS'
   ],
   '@@TRACKS'
 );
@@ -106,6 +107,13 @@ export const actionCreators = {
     return async dispatch => {
       await LocalStorageService.removeTracks();
       dispatch({ type: actions.DELETE_TRACKS });
+    };
+  },
+  pullLastFrames() {
+    return async dispatch => {
+      dispatch({ type: actions.PULLING_TRACKS });
+      dispatch(actionCreators.getFrames());
+      setTimeout(dispatch(actionCreators.pullLastFrames()), 15000);
     };
   }
 };
