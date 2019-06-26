@@ -5,7 +5,7 @@ import StartIcon from '../../../../assets/mapIcons/start.png';
 
 class MarkersRender extends PureComponent {
   render() {
-    const { tracks } = this.props;
+    const { tracks } = this.props; // eslint-disable-line
     return (
       <>
         {

@@ -5,7 +5,7 @@ import NavigationService from '../../../services/NavigationService';
 
 import styles from './styles';
 
-const { BluetoothClient } = NativeModules.BluetoothClient;
+const { BluetoothClient } = NativeModules;
 
 class Config extends Component {
   state = {
@@ -13,6 +13,10 @@ class Config extends Component {
     ssid: '',
     password: ''
   };
+
+  componentDidMount() {
+    this.handleOpenConfig();
+  }
 
   handleSsidChange = newSsid => {
     this.setState({ ssid: newSsid });

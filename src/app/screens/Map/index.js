@@ -42,7 +42,6 @@ class Map extends Component {
     const { region } = this.state;
     // eslint-disable-next-line
     const { tracks } = this.props;
-    console.log(tracks);
     return (
       <MapView
         provider={PROVIDER_GOOGLE}
