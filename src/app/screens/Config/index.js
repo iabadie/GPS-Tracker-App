@@ -39,6 +39,8 @@ class Config extends Component {
   callbackApplyConfig = applied => {
     if (!applied) {
       this.handleOpenConfig();
+    } else {
+      this.back();
     }
   };
 
@@ -52,7 +54,7 @@ class Config extends Component {
       <View style={styles.margin}>
         <View style={styles.margin}>
           <View>
-            <TouchableHighlight onPress={() => {}}>
+            <TouchableHighlight onPress={this.back}>
               <Text style={styles.configInput}>Cancelar</Text>
             </TouchableHighlight>
           </View>

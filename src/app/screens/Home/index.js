@@ -25,7 +25,7 @@ class Home extends Component<Props> {
 
   componentDidMount() {
     const { dispatch } = this.props;
-    dispatch(TrackActions.getTracks());
+    dispatch(TrackActions.pullLastFrames());
     this.setCallbacks();
   }
 

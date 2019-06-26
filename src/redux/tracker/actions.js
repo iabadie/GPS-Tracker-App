@@ -112,8 +112,8 @@ export const actionCreators = {
   pullLastFrames() {
     return async dispatch => {
       dispatch({ type: actions.PULLING_TRACKS });
-      dispatch(actionCreators.getFrames());
-      setTimeout(dispatch(actionCreators.pullLastFrames()), 15000);
+      dispatch(actionCreators.getTracks());
+      setTimeout(() => dispatch(actionCreators.pullLastFrames()), 20000);
     };
   }
 };
