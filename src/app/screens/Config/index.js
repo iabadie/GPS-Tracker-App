@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
-import { TextInput, Text, TouchableHighlight, View, NativeModules } from 'react-native';
+import { ImageBackground, TextInput, Text, TouchableHighlight, View, NativeModules } from 'react-native';
 
 import NavigationService from '../../../services/NavigationService';
+import fondo from '../../assets/background/fondo.png';
 
 import styles from './styles';
 
@@ -55,40 +56,40 @@ class Config extends Component {
   render() {
     const { password, ssid, connected } = this.state;
     return (
-      <View style={styles.margin}>
-        <View style={styles.margin}>
-          <View>
-            <TouchableHighlight onPress={this.back}>
-              <Text style={styles.configInput}>Cancelar</Text>
+      <ImageBackground style={styles.container} source={fondo}>
+        <View style={styles.container}>
+          <TextInput
+            style={styles.configInputMain}
+            onChangeText={this.handleSsidChange}
+            value={ssid}
+            placeholder="SSID"
+            placeholderTextColor="white"
+          />
+          <TextInput
+            style={styles.configInputMain}
+            onChangeText={this.handlePasswordChange}
+            value={password}
+            placeholder="Password"
+            placeholderTextColor="white"
+          />
+        </View>
+        {connected ? (
+          <View style={styles.margin}>
+            <TouchableHighlight onPress={this.handleAcceptConfig}>
+              <Text style={styles.configInput}>Confirmar</Text>
             </TouchableHighlight>
           </View>
+        ) : (
           <View style={styles.margin}>
-            <TextInput
-              style={styles.configInput}
-              onChangeText={this.handleSsidChange}
-              value={ssid}
-              placeholder="SSID"
-            />
-            <TextInput
-              style={styles.configInput}
-              onChangeText={this.handlePasswordChange}
-              value={password}
-              placeholder="Password"
-            />
+            <Text style={[styles.configInput, styles.searching]}>Buscando...</Text>
           </View>
-          {connected ? (
-            <View style={styles.margin}>
-              <TouchableHighlight onPress={this.handleAcceptConfig}>
-                <Text style={styles.configInput}>Aceptar</Text>
-              </TouchableHighlight>
-            </View>
-          ) : (
-            <View style={styles.margin}>
-              <Text style={styles.configInput}>Conectando</Text>
-            </View>
-          )}
+        )}
+        <View style={styles.buttonMargin}>
+          <TouchableHighlight onPress={this.back}>
+            <Text style={styles.configInput}>Cancelar</Text>
+          </TouchableHighlight>
         </View>
-      </View>
+      </ImageBackground>
     );
   }
 }

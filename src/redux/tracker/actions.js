@@ -75,7 +75,7 @@ export const actionCreators = {
         // const mappedtracks = parsedTracks.map(track => normalizeMapTracks(track));
         const tracks = getState().tracker.tracks.concat(parsedTracks);
         await LocalStorageService.setTracks(tracks);
-        setFrame(newTracks); // Api call
+        // setFrame(newTracks); // Api call  TODO volver a agregar
         dispatch(privateActionCreators.setNewTracksSuccess(tracks));
       } catch (e) {
         dispatch(privateActionCreators.setNewTracksFailure(e.message));
@@ -110,10 +110,11 @@ export const actionCreators = {
     };
   },
   pullLastFrames() {
-    return async dispatch => {
-      dispatch({ type: actions.PULLING_TRACKS });
-      dispatch(actionCreators.getTracks());
-      setTimeout(() => dispatch(actionCreators.pullLastFrames()), 20000);
+    return async () => {
+      // TODO volver a agregar
+      // dispatch({ type: actions.PULLING_TRACKS });
+      // dispatch(actionCreators.getTracks());
+      // setTimeout(() => dispatch(actionCreators.pullLastFrames()), 20000);
     };
   }
 };

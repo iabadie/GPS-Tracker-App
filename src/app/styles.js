@@ -22,7 +22,8 @@ const styles = StyleSheet.create({
   },
   configBluetoothIcon: {
     width: 30,
-    height: 30
+    height: 30,
+    marginRight: 15
   }
 });
 

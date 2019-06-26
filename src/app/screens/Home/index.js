@@ -7,6 +7,7 @@ import React, { Component } from 'react';
 import { Text, View, NativeModules } from 'react-native';
 import { connect } from 'react-redux';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import { createSelector } from 'reselect';
 
 import Map from '../Map';
 import { actionCreators as TrackActions } from '../../../redux/tracker/actions';
@@ -88,8 +89,20 @@ class Home extends Component<Props> {
   }
 }
 
+const normalizeTracks = tracks => {
+  return tracks.map(track => ({
+    latitude: parseFloat(track.Latitude),
+    longitude: parseFloat(track.Longitude)
+  }));
+};
+
+const tracksSelector = createSelector(
+  store => store.tracker.tracks,
+  tracks => normalizeTracks(tracks)
+);
+
 const mapStateToProps = store => ({
-  tracks: store.tracker.tracks,
+  tracks: tracksSelector(store),
   lastTrack: (store.tracker.tracks.length !== 0 ? store.tracker.tracks.length - 1 : 0).toString()
 });
 
