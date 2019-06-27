@@ -20,7 +20,8 @@ export const apiSetup = dispatch => {
   });
 };
 
-export const getFrames = async (TrackNumber = 0) => api.get('/frames', { lastTrack: TrackNumber });
+export const getFrames = async (TrackNumber = 0) =>
+  api.get('/frames', { user: 'GPSTrackerUser', lastTrack: TrackNumber });
 
 export const setFrame = async frame => api.post('/frames', frame);
 

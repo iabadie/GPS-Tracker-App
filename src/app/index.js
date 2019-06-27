@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Provider } from 'react-redux';
 
+import './reactoConfig';
 import reduxStore from '../redux/store';
 
 import App from './app';
