@@ -109,6 +109,16 @@ android {
         versionCode 1
         versionName "1.0"
     }
+    signingConfigs {
+        release {
+            if (project.hasProperty('GOSMO_RELEASE_STORE_FILE')) {
+                storeFile file(GOSMO_RELEASE_STORE_FILE)
+                storePassword GOSMO_RELEASE_STORE_PASSWORD
+                keyAlias GOSMO_RELEASE_KEY_ALIAS
+                keyPassword GOSMO_RELEASE_KEY_PASSWORD
+            }
+        }
+    }
     splits {
         abi {
             reset()
@@ -121,6 +131,7 @@ android {
         release {
             minifyEnabled enableProguardInReleaseBuilds
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
+            signingConfig signingConfigs.release
         }
     }
     // applicationVariants are e.g. debug, release

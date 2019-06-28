@@ -69,7 +69,6 @@ export const actionCreators = {
     return async (dispatch, getState) => {
       dispatch({ type: actions.SET_NEW_TRACKS });
       try {
-        // eslint-disable-next-line camelcase
         const parsedTracks = JSON.parse(newTracks)?.frames;
         if (!parsedTracks) throw new Error('Información de request inválida');
         // const mappedtracks = parsedTracks.map(track => normalizeMapTracks(track));
@@ -94,7 +93,7 @@ export const actionCreators = {
           tracks = tracks.concat(response.data);
           dispatch(privateActionCreators.getTracksSuccess(tracks));
           await LocalStorageService.setTracks(tracks);
-          HttpServer.setLastTrack(tracks.length.toString());
+          HttpServer.lastTrack(tracks.length.toString());
         } else if (getState().tracker.tracks.length !== tracks.length) {
           dispatch(privateActionCreators.getTracksSuccess(tracks));
         } else {

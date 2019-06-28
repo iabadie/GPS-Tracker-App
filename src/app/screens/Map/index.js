@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
+import { PROVIDER_GOOGLE, AnimatedRegion, Animated } from 'react-native-maps';
 
 import styles from './styles';
 import MarkersRender from './components/markers';
@@ -22,20 +22,24 @@ const initialState = {
 // ];
 
 class Map extends Component {
-  state = { region: initialState };
+  state = { region: new AnimatedRegion(initialState) };
 
   componentDidUpdate(prevProps) {
     const { tracks } = this.props; // eslint-disable-line
     if (prevProps.tracks.length !== tracks.length) {// eslint-disable-line
       const last = tracks[tracks.length - 1];
       this.setState(prevState => ({// eslint-disable-line
-        region: { ...prevState.region, latitude: last.latitude, longitude: last.longitude }
+        region: new AnimatedRegion({
+          ...prevState.region,
+          latitude: last.latitude,
+          longitude: last.longitude
+        })
       }));
     }
   }
 
   handleRegionChange = region => {
-    this.setState({ region });
+    this.setState({ region: new AnimatedRegion(region) });
   };
 
   render() {
@@ -43,14 +47,14 @@ class Map extends Component {
     // eslint-disable-next-line
     const { tracks } = this.props;
     return (
-      <MapView
+      <Animated
         provider={PROVIDER_GOOGLE}
         style={styles.container}
         region={region}
         onRegionChangeComplete={this.handleRegionChange}
       >
         <MarkersRender tracks={tracks} />
-      </MapView>
+      </Animated>
     );
   }
 }
