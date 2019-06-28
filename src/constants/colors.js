@@ -40,5 +40,5 @@ export const tabShadow = {
 };
 
 export const colorPrimary = green;
-export const colorSecondary = blue;
+export const colorSecondary = '#2A3D5C';
 export const colorBackground = 'transparent';

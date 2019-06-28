@@ -19,6 +19,9 @@ export default StyleSheet.create({
     width: 250
   },
   searching: {
+    backgroundColor: 'transparent'
+  },
+  connect: {
     backgroundColor: 'rgba(44, 114, 160, 0.8)'
   },
   configInputMain: {

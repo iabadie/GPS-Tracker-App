@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:drawable="@color/mainColor" />
+    <item
+        android:drawable="@drawable/ic_satellite_color"
+        android:gravity="center"/>
+    <item android:bottom="100dp">
+        <bitmap
+            android:src="@mipmap/ic_team"
+            android:antialias="true"
+            android:gravity="bottom"
+            />
+    </item>
+</layer-list>

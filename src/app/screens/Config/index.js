@@ -86,7 +86,7 @@ class Config extends Component {
         )}
         <View style={styles.buttonMargin}>
           <TouchableHighlight onPress={this.back}>
-            <Text style={styles.configInput}>Cancelar</Text>
+            <Text style={[styles.configInput, styles.connect]}>Cancelar</Text>
           </TouchableHighlight>
         </View>
       </ImageBackground>
