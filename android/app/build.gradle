@@ -111,11 +111,11 @@ android {
     }
     signingConfigs {
         release {
-            if (project.hasProperty('GOSMO_RELEASE_STORE_FILE')) {
-                storeFile file(GOSMO_RELEASE_STORE_FILE)
-                storePassword GOSMO_RELEASE_STORE_PASSWORD
-                keyAlias GOSMO_RELEASE_KEY_ALIAS
-                keyPassword GOSMO_RELEASE_KEY_PASSWORD
+            if (project.hasProperty('GPSTRACKER_RELEASE_STORE_FILE')) {
+                storeFile file(GPSTRACKER_RELEASE_STORE_FILE)
+                storePassword GPSTRACKER_RELEASE_STORE_PASSWORD
+                keyAlias GPSTRACKER_RELEASE_KEY_ALIAS
+                keyPassword GPSTRACKER_RELEASE_KEY_PASSWORD
             }
         }
     }
