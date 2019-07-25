@@ -17,14 +17,21 @@ middlewares.push(thunk);
 
 /* ------------- Assemble Middleware ------------- */
 enhancers.push(applyMiddleware(...middlewares));
-const store = __DEV__
-  ? createStore(
-      reducers,
-      compose(
-        ...enhancers,
-        Reactotron.createEnhancer()
-      )
-    )
-  : createStore(reducers, compose(...enhancers));
+const store = createStore(
+  reducers,
+  compose(
+    ...enhancers,
+    Reactotron.createEnhancer()
+  )
+);
+// __DEV__
+//   ? createStore(
+//       reducers,
+//       compose(
+//         ...enhancers,
+//         Reactotron.createEnhancer()
+//       )
+//     )
+// : createStore(reducers, compose(...enhancers));
 
 export default store;
